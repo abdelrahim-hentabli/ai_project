@@ -3,33 +3,12 @@ import { Link } from "react-router-dom";
 
 import { useState, useEffect } from 'react'
 
-import { FaBars, FaHome } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import { AiOutlineClose } from 'react-icons/ai';
-import { GiPuzzle, GiPerson } from 'react-icons/gi';
+
+import { SidebarData } from './SidebarData.js';
 
 import { IconContext } from 'react-icons';
-
-const SidebarData = [
-  {
-    title: 'Home',
-    path: '/',
-    icon: <FaHome />,
-    cName: 'nav-text'
-  },
-  {
-    title: 'Eight Puzzle',
-    path: '/eightpuzzle',
-    icon: <GiPuzzle />,
-    cName: 'nav-text'
-  },
-  {
-    title: 'Nine Men',
-    path: '/ninemen',
-    icon: <GiPerson />,
-    cName: 'nav-text'
-  }
-]
-
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
