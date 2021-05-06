@@ -1,0 +1,29 @@
+.eightpuzzle {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.menu {
+  height: 70%;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.line-item {
+  width: 80%;
+  flex: 0 1 auto;
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.main-canvas {
+  border: 5px groove gray;
+  margin: 20px;
+}
