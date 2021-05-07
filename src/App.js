@@ -11,9 +11,9 @@ function App() {
         <BrowserRouter>
           <Navbar/>
           <Switch>
-            <Route path='/' exact component={Home} />
-            <Route path='/eightpuzzle' component={EightPuzzle} />
-            <Route path='/ninemen' component={NineMen} />
+            <Route path='/ai_project/' exact component={Home} />
+            <Route path='/ai_project/eightpuzzle' component={EightPuzzle} />
+            <Route path='/ai_project/ninemen' component={NineMen} />
           </Switch>
         </BrowserRouter>
     </>

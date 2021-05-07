@@ -5,19 +5,19 @@ import { GiPuzzle, GiPerson } from 'react-icons/gi';
 export const SidebarData = [
   {
     title: 'Home',
-    path: '/',
+    path: '/ai_project/',
     icon: <FaHome />,
     cName: 'nav-text'
   },
   {
     title: 'Eight Puzzle',
-    path: '/eightpuzzle',
+    path: '/ai_project/eightpuzzle',
     icon: <GiPuzzle />,
     cName: 'nav-text'
   },
   {
     title: 'Nine Men',
-    path: '/ninemen',
+    path: '/ai_project/ninemen',
     icon: <GiPerson />,
     cName: 'nav-text'
   }
