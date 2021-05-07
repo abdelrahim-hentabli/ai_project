@@ -1,5 +1,5 @@
 import './EightPuzzle.css';
-import {Select, MenuItem} from '@material-ui/core';
+import {Select, MenuItem, Button} from '@material-ui/core';
 import PriorityQueue from 'js-priority-queue';
 
 import {useEffect, useRef, useState } from 'react';
@@ -10,6 +10,7 @@ function goal(state){
 
 function misplaced_tile(state){
   var count = 0;
+  console.log(state);
   for(let i = 0; i < 8; i++){
     count += ((i+1).toString() === state[i])?0:1;
   }
@@ -31,7 +32,6 @@ function manhattan_distance(state){
 //They return null if move is invalid
 function moveUp(state){
   var index = state.search(/\*/);
-  var output = state;
   if(index === -1){
     console.log('Error: Invalid State');
     return null;
@@ -97,26 +97,41 @@ const operations = [moveLeft, moveUp, moveRight, moveDown];
 
 
 function a_star(startState, heuristic){
+  logText = [];
   var visitedStates = new Set();
   visitedStates.add(startState);
   var queue = new PriorityQueue({ comparator: function(a, b) { return a[0] - b[0];}});
-  queue.queue([0, startState]);
-  var currentState;
-  var currentCost ;
-  var tempState;
-  while(queue.length > 0 && !goal(currentState)){
-    [currentCost, currentState] = queue.dequeue();
+  queue.queue([heuristic(startState), 0, startState, []]);
+  var currentState, previousStates, tempState, depth;
+  var maxQueueSize = 0;
+  var steps = 0;
+  while(queue.length > 0){
+    steps++;
+    maxQueueSize = Math.max(maxQueueSize, queue.length);
+    [, depth, currentState, previousStates] = queue.dequeue();
+    console.log(previousStates);
+    console.log(currentState);
     logText.push(<div>{currentState.substr(0,3)}</div>);
     logText.push(<div>{currentState.substr(3,3)}</div>);
     logText.push(<div>{currentState.substr(6)}</div>);
+    logText.push(<div>Queue Size: {queue.length}</div>);
+    logText.push(<div>Heuristic: {heuristic(currentState)}</div>);
+    logText.push(<div>Depth: {depth}</div>);
+    logText.push(<br/>);
+    if(goal(currentState)){
+      break;
+    }
     for(let i = 0; i < 4; i++){
-      tempState = operations[i](currentState); 
+      tempState = operations[i](currentState);
       if( tempState != null && !visitedStates.has(tempState)){
-        queue.queue([currentCost + heuristic(tempState), tempState]);
+        previousStates.push(currentState);
+        queue.queue([depth+1 + heuristic(tempState), depth+1, tempState, previousStates]);
         visitedStates.add(tempState);
       }
     }
   }
+  logText.push(<div>Solver finished in {steps} steps.</div>)
+  logText.push(<div>Max Queue Size: {maxQueueSize}</div>)
 }
 
 const startStates = [ '12345678*', '1234567*8', '12*453786', '*12453786', '8716*2543', '12345687*']
@@ -129,12 +144,11 @@ function EightPuzzle() {
   const [startState, setStartState] = useState(0);
   const [algorithm, setAlgorithm] = useState(0);
   const [heuristic, setHeuristic] = useState(0);
-  const [done, setDone] = useState(false);
   const [log, setLog] = useState(true);
+  const [logUpdated, setLogUpdated] = useState(false);
   
   const updateStartState = (e) => {
     setStartState(e.target.value);
-    //a_star(startStates[startState], heuristics[heuristic]);
   }
   
   const updateAlgorithm = (e) => {
@@ -208,6 +222,16 @@ function EightPuzzle() {
             </Select>
           </div>
         }
+        <div className='line-item'>
+            <Button variant="contained" onClick={() => {if(algorithm){
+                a_star(startStates[startState], heuristics[heuristic]);
+              }
+              else{
+                a_star(startStates[startState], (state) => {return 0;})
+              }
+              setLogUpdated(!logUpdated);}} color="primary">Solve</Button>
+            <Button variant="contained" onClick={() => { setLog(!log) }}>Log</Button>
+        </div>
       </div>
       {log && 
       <div className='log-container'>
