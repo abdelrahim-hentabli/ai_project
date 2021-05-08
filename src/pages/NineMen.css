@@ -1,0 +1,54 @@
+.ninemen {
+  display: flex;
+  height: 100%;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.main-canvas {
+  border: 5px groove gray;
+  margin: 20px;
+}
+
+.menu {
+  height: 70%;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.page-title {
+  padding: 0px 0px 40px 0px;
+}
+
+.line-item {
+  width: 80%;
+  flex: 0 1 auto;
+  font-size: 20px;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.log {
+  font-size: 15px;
+  overflow: auto;
+  bottom:0;
+  right:0;
+  height:560px;
+  width: 100%;
+  float: right;
+  padding: 0px 0px 0px 0px;
+  background-color: #DCDCDC;
+}
+
+.log-container {
+  float: right;
+  height: 560px;
+  width: 400px;
+  
+}
