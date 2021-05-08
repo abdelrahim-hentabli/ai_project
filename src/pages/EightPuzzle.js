@@ -146,6 +146,9 @@ function EightPuzzle() {
   const [heuristic, setHeuristic] = useState(0);
   const [log, setLog] = useState(true);
   const [logUpdated, setLogUpdated] = useState(false);
+
+  const [solutionStates, setSolutionStates] = useState([]);
+  const [solutionIndex, setSolutionIndex] = useState(0);
   
   const updateStartState = (e) => {
     setStartState(e.target.value);
