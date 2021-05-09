@@ -34,73 +34,49 @@ function manhattan_distance(state){
   return totalDist;
 }
 
-//These functions are named after the direction the blank space moves
-//They return null if move is invalid
-function moveUp(state){
-  var index = state.search(/\*/);
-  if(index === -1){
-    console.log('Error: Invalid State');
-    return null;
+//This function returns a list of all states that are valid
+function validMoves(state){
+  var output = [];
+  var indicesFound = 0;
+  var underneathI;
+  var aboveI;
+  var tempState = "";
+  for(let i = 0; i < state.length; i++){ 
+    if(state[i] === '*'){
+      indicesFound++;
+      switch(i){
+        case 10:
+        case 11:
+        case 12:
+          underneathI = (i-10) * 2 + 3;
+          output.push(state.substring(0, underneathI) + '*' + state.substring(underneathI+1, i) + state[underneathI] + state.substring(i+1));
+          break;
+        case 3:
+        case 5:
+        case 7:
+          aboveI = (i-3) / 2 + 10;
+          output.push(state.substring(0, i) + state[aboveI] + state.substring(i+1, aboveI) + '*' + state.substring(aboveI+1));
+        default:
+          if(i !== 0){
+            output.push(state.substring(0, i-1) + '*' + state[i-1] + state.substring(i+1));
+          }
+          if(i !== 9){
+            output.push(state.substring(0, i) + state[i+1] + '*' + state.substring(i+2));
+          }
+          break;
+      }
+    }
+  }
+  if(indicesFound !== 4){
+    console.log("Error: Invalid State: "+state);
+    return [];
   }
   else{
-    if(index < 3){
-      return null;
-    }
-    else{
-      return state.substring(0, index-3) + '*' + state.substring(index-2, index) + state[index-3] + state.substring(index+1);
-    }
-  }
-}
-function moveDown(state){
-  var index = state.search(/\*/);
-  if(index === -1){
-    console.log('Error: Invalid State');
-    return null;
-  }
-  else{
-    if(index > 5){
-      return null;
-    }
-    else{
-      return state.substring(0, index) + state[index+3] + state.substring(index+1, index+3) + '*' + state.substring(index+4);
-    }
-  }
-}
-function moveRight(state){
-  var index = state.search(/\*/);
-  if(index === -1){
-    console.log('Error: Invalid State');
-    return null;
-  }
-  else{
-    if(index % 3 === 2){
-      return null;
-    }
-    else{
-      return state.substring(0, index) + state[index+1] + '*' + state.substring(index+2);
-    }
-  }
-}
-function moveLeft(state){
-  var index = state.search(/\*/);
-  if(index === -1){
-    console.log('Error: Invalid State');
-    return null;
-  }
-  else{
-    if(index % 3 === 0){
-      return null;
-    }
-    else{
-      return state.substring(0, index-1) + '*' + state[index-1]  + state.substring(index+1);      
-    }
+    return output;
   }
 }
 
 var logText = [];
-
-const operations = [moveLeft, moveUp, moveRight, moveDown];
-
 
 function a_star(startState, heuristic){
   logText = [];
@@ -115,11 +91,8 @@ function a_star(startState, heuristic){
     steps++;
     maxQueueSize = Math.max(maxQueueSize, queue.length);
     [, depth, currentState, previousStates] = queue.dequeue();
-    console.log(previousStates);
-    console.log(currentState);
-    logText.push(<div>{currentState.substr(0,3)}</div>);
-    logText.push(<div>{currentState.substr(3,3)}</div>);
-    logText.push(<div>{currentState.substr(6)}</div>);
+    logText.push(<div>&nbsp;&nbsp;&nbsp;{currentState.substr(10,1)+" "+currentState.substr(11,1)+" "+currentState.substr(12)}</div>);
+    logText.push(<div>{currentState.substr(0,10)}</div>);
     logText.push(<div>Queue Size: {queue.length}</div>);
     logText.push(<div>Heuristic: {heuristic(currentState)}</div>);
     logText.push(<div>Depth: {depth}</div>);
@@ -127,8 +100,9 @@ function a_star(startState, heuristic){
     if(goal(currentState)){
       break;
     }
-    for(let i = 0; i < 4; i++){
-      tempState = operations[i](currentState);
+    var newStates = validMoves(currentState);
+    for(let i = 0; i < newStates.length; i++){
+      tempState = newStates[i];
       if( tempState != null && !visitedStates.has(tempState)){
         previousStates.push(currentState);
         queue.queue([depth+1 + heuristic(tempState), depth+1, tempState, previousStates]);
@@ -140,11 +114,11 @@ function a_star(startState, heuristic){
   logText.push(<div>Max Queue Size: {maxQueueSize}</div>)
 }
 
-const startStates = [ '123456789****', '12345678*9***', '123*5*7**9468', '*12453786', '*234567891***', '12345687*']
+const startStates = [ '123456789****', '12345678*9***', '123*5*7**9468', '*23456789**1*', '*234567891***']
 const heuristics = [misplaced_tile, manhattan_distance]
 
 function NineMen() {
-    const canvas = useRef(null);
+  const canvas = useRef(null);
             
   const [puzzleState, setPuzzleState] = useState('123456789****');
   const [startState, setStartState] = useState(0);
@@ -234,7 +208,6 @@ function NineMen() {
             <MenuItem value={2}>Easy</MenuItem>
             <MenuItem value={3}>Doable</MenuItem>
             <MenuItem value={4}>Oh Boy</MenuItem>
-            <MenuItem value={5}>Impossible</MenuItem>
           </Select>
         </div>
         <div className='line-item'>

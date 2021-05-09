@@ -35,6 +35,8 @@
 }
 
 .log {
+  font-family:  Consolas, monaco, monospace;
+  white-space: pre;
   font-size: 15px;
   overflow: auto;
   bottom:0;
